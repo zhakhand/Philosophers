@@ -12,20 +12,24 @@
 
 #include "include/philo.h"
 
-void	init_info(t_info *info, int sz, char **args)
+t_info	*init_info(int sz, char **args)
 {
-	if (!check_args(args))
-		exit(3);
-	info->is_dead = 0;
+	t_info	*info;
+	t_philo philo;
+
+	info = malloc(sizeof(t_info));
+	if (!info)
+		exit(0);
+	
 }
 
 int	main(int ac, char **av)
 {
 	t_info *info;
 	
-	info = malloc(sizeof(t_info));
-	if (!info)
-		return (2);
-	if (ac == 5 || ac == 6)
-		init_info(info, ac - 1, av + 1);
+	if (ac < 5 || ac > 7)
+		return (0);
+	if (!check_args(av + 1))
+		return (0);
+	info = init_info(ac - 1, av + 1);
 }

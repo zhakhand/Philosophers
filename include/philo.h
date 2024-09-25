@@ -29,7 +29,6 @@ typedef struct s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				start_time;
-	int				philo_num;
 	int				num_to_eat;
 	int				*dead;
 	pthread_mutex_t	*r_fork;
@@ -42,12 +41,17 @@ typedef struct s_philo
 typedef struct s_info
 {
 	int				is_dead;
+	int				philo_num;
 	pthread_mutex_t	dead_lock;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	write_lock;
 	t_philo			*philos;
 }				t_info;
 
-
+t_info *init_info(int sz, char **args);
+int		check_args(char **args);
+char	*ft_itoa(int n);
+int		ft_atoi(char const *str);
+int		ft_strcmp(char const *s1, char const *s2);
 
 #endif
