@@ -22,3 +22,7 @@ Monitoring:
 1. Possible to implement a thread that can act as an Observer that constantly checks if one of the Philosophers died or they all ate minimal amount of meals.
 2. Instead of thread also possible to create a function which will do the same.
 3. Adding one of the functions to monitor death or goal (Meals) also helps to visualize timings better. Although in visualizer last actions could be possibly ignored.
+
+In order to survive Philosophers need:
+1. Time to die == Time to Eat + Time to sleep + 10 (If even)
+2. Time to die == (Time to Eat * 4) + 10 (If odd)
