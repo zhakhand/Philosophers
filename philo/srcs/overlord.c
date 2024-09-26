@@ -46,6 +46,7 @@ void	overlord(t_info *info)
 			{
 				is_doing("died", &philos[i]);
 				info->one_dead = 1;
+				pthread_mutex_unlock(&info->is_eating);
 				break ;
 			}
 			pthread_mutex_unlock(&info->is_eating);
