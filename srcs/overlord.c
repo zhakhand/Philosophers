@@ -12,19 +12,18 @@
 
 #include "../include/philo.h"
 
-static void	all_ate(t_info *info)
+void	all_ate(t_info *info)
 {
 	int		i;
 	int		count;
-	t_philo	*philos;
 
-	philos = info->philos;
-	i = -1;
+	i = 0;
 	count = 0;
-	while (++i < info->philo_num && philos[i].num_to_eat != -1)
+	while (info->philos[i].num_to_eat != -1 && i < info->philo_num)
 	{
-		if (philos[i].meals_eaten >= philos[i].num_to_eat)
+		if (info->philos[i].meals_eaten >= info->philos[i].num_to_eat)
 			count++;
+		i++;
 	}
 	if (count == info->philo_num)
 		info->all_full = 1;
@@ -33,8 +32,7 @@ static void	all_ate(t_info *info)
 void	overlord(t_info *info)
 {
 	int		i;
-	int		k;
-	t_philo *philos;
+	t_philo	*philos;
 
 	philos = info->philos;
 	while (!info->all_full)
@@ -43,19 +41,18 @@ void	overlord(t_info *info)
 		while (++i < info->philo_num && !info->one_dead)
 		{
 			pthread_mutex_lock(&info->is_eating);
-			if (get_ctime() - philos[i].last_meal >= philos[i].time_to_die)
+			if (get_ctime(info) - philos[i].last_meal > \
+			philos[i].time_to_die && !philos[i].is_eating)
 			{
 				is_doing("died", &philos[i]);
 				info->one_dead = 1;
-				k = -1;
-				while (++k < info->philo_num)
-					pthread_mutex_unlock(&info->forks[k]);
+				break ;
 			}
 			pthread_mutex_unlock(&info->is_eating);
-			//usleep(500);
 		}
-			if (info->one_dead)
-				break ;
-			all_ate(info);
+		if (info->one_dead)
+			break ;
+		all_ate(info);
 	}
+	destroy_all(info);
 }

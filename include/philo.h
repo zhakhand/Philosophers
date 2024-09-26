@@ -24,6 +24,7 @@ typedef struct s_philo
 	int				id;
 	int				l_f;
 	int				r_f;
+	int				is_eating;
 	int				meals_eaten;
 	int				num_to_eat;
 	long long		time_to_eat;
@@ -45,16 +46,26 @@ typedef struct s_info
 	t_philo			philos[200];
 }				t_info;
 
-t_info *init_info(char **args);
-int		check_args(char **args);
-char	*ft_itoa(int n);
-int		ft_atoi(char const *str);
-int		ft_strcmp(char const *s1, char const *s2);
-long long	ft_usleep(long long ms);
-long long	get_ctime(void);
-void	overlord(t_info *info);
-void	*routine(void *data);
-void	is_doing(char *msg, t_philo *philo);
-void	init_philo(t_info *info, char **args);
+/*INITIALIZE*/
+t_info		*init_info(char **args);
+void		init_philo(t_info *info, char **args);
+/*TIMESTAMP*/
+long long	get_ctime(t_info *info);
+long long	ft_usleep(long long ms, t_info *info);
+/*ROUTINE*/
+void		*routine(void *data);
+void		is_doing(char *msg, t_philo *philo);
+/*OVERSEER*/
+void		overlord(t_info *info);
+void		all_ate(t_info *info);
+/*UTILS*/
+char		*ft_itoa(int n);
+int			ft_atoi(char const *str);
+int			check_args(char **args);
+int			ft_strcmp(char const *s1, char const *s2);
+void		set_forks(int *upper, int *lower, t_philo *philo);
+/*CLEANUP*/
+void		destroy_forks(t_info *info);
+void		destroy_all(t_info *info);
 
 #endif

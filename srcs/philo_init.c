@@ -18,14 +18,28 @@ void	init_mutexes(t_info *info)
 
 	i = -1;
 	while (++i < info->philo_num)
-		pthread_mutex_init(&(info->forks[i]), NULL);
+	{
+		if (pthread_mutex_init(&(info->forks[i]), NULL))
+		{
+			while (--i)
+				pthread_mutex_destroy(&info->forks[i]);
+			exit(1);
+		}
+	}
 	if (pthread_mutex_init(&(info->is_eating), NULL))
-		exit(2);
+	{
+		destroy_forks(info);
+		exit(1);
+	}
 	if (pthread_mutex_init(&(info->is_writing), NULL))
-		exit(2);
+	{
+		pthread_mutex_destroy(&info->is_eating);
+		destroy_forks(info);
+		exit(1);
+	}
 }
 
-void	apply_args(t_philo *philo, char **args, t_info *info)
+void	apply_args(t_philo *philo, char **args)
 {
 	philo->time_to_die = ft_atoi(args[2]);
 	philo->time_to_eat = ft_atoi(args[3]);
@@ -35,21 +49,22 @@ void	apply_args(t_philo *philo, char **args, t_info *info)
 	else
 		philo->num_to_eat = -1;
 	philo->meals_eaten = 0;
-	philo->last_meal = get_ctime();
+	philo->last_meal = philo->info->start;
+	philo->is_eating = 0;
 }
 
 void	init_philo(t_info *info, char **args)
 {
 	int		i;
-	
+
 	i = -1;
 	init_mutexes(info);
 	while (++i < info->philo_num)
 	{
+		info->philos[i].info = info;
 		info->philos[i].id = i + 1;
-		apply_args(&info->philos[i], args, info);
+		apply_args(&info->philos[i], args);
 		info->philos[i].l_f = i;
 		info->philos[i].r_f = (i + 1) % info->philo_num;
-		info->philos[i].info = info;
 	}
 }

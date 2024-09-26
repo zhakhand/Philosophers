@@ -14,47 +14,44 @@
 
 t_info	*init_info(char **args)
 {
-	t_info	*info;
-	t_philo philo;
+	t_info			*info;
 
 	info = malloc(sizeof(t_info));
 	if (!info)
-		exit(0);
+		exit(2);
 	info->one_dead = 0;
 	info->all_full = 0;
-	info->start = get_ctime();
+	info->start = 0;
+	info->start = get_ctime(info);
 	info->philo_num = ft_atoi(args[0]);
-	return info;
+	return (info);
 }
 
 void	join_threads(t_info *info)
 {
 	int			i;
-	
+
 	i = -1;
-	info->start = get_ctime();
 	while (++i < info->philo_num)
 	{
-		if (pthread_create(&info->philos[i].thread, NULL, &routine, &info->philos[i]))
-			exit (2);
-		info->philos[i].last_meal = get_ctime();
+		if (pthread_create(&info->philos[i].thread, \
+		NULL, &routine, &info->philos[i]))
+			return (destroy_all(info));
 	}
 	if (info->philo_num > 1)
 		overlord(info);
 	i = -1;
 	while (++i < info->philo_num)
-		pthread_join(info->philos[i].thread, NULL);
-	pthread_mutex_destroy(&info->is_writing);
-	pthread_mutex_destroy(&info->is_eating);
-	i = -1;
-	while (++i < info->philo_num)
-		pthread_mutex_destroy(&info->forks[i]);
+	{
+		if (pthread_join(info->philos[i].thread, NULL))
+			return (destroy_all(info));
+	}
 }
 
 int	main(int ac, char **av)
 {
-	t_info			*info;
-	
+	t_info	*info;
+
 	if (ac < 5 || ac > 7)
 		return (0);
 	if (!check_args(av + 1))
@@ -63,5 +60,5 @@ int	main(int ac, char **av)
 	init_philo(info, av);
 	join_threads(info);
 	free(info);
-	return 0;
+	return (0);
 }

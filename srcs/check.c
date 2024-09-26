@@ -41,3 +41,14 @@ int	check_args(char **args)
 		return (0);
 	return (1);
 }
+
+void	set_forks(int *upper, int *lower, t_philo *philo)
+{
+	*upper = philo->l_f;
+	*lower = philo->r_f;
+	if (philo->id % 2)
+	{
+		*upper = philo->r_f;
+		*lower = philo->l_f;
+	}
+}
