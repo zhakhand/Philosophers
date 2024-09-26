@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 14:40:37 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 17:09:38 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/26 18:40:38 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,16 @@ void	overlord(t_info *info)
 		while (++i < info->philo_num && !info->one_dead)
 		{
 			pthread_mutex_lock(&info->is_eating);
-			if (get_ctime() - philos[i].last_meal > philos[i].time_to_die)
+			if (get_ctime() - philos[i].last_meal >= philos[i].time_to_die)
 			{
-				is_doing("has died\n", &philos[i]);
+				is_doing("died", &philos[i]);
 				info->one_dead = 1;
 				k = -1;
 				while (++k < info->philo_num)
 					pthread_mutex_unlock(&info->forks[k]);
 			}
 			pthread_mutex_unlock(&info->is_eating);
-			usleep(500);
+			//usleep(500);
 		}
 			if (info->one_dead)
 				break ;

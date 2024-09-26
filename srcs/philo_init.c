@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:38:30 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 16:47:48 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/26 18:42:53 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,15 @@ void	apply_args(t_philo *philo, char **args, t_info *info)
 void	init_philo(t_info *info, char **args)
 {
 	int		i;
-	t_philo	phil;
 	
 	i = -1;
 	init_mutexes(info);
 	while (++i < info->philo_num)
 	{
-		phil.id = i + 1;
-		apply_args(&phil, args, info);
-		phil.l_f = i;
-		phil.r_f = (i + 1) % info->philo_num;
-		phil.info = info;
-		info->philos[i] = phil;
+		info->philos[i].id = i + 1;
+		apply_args(&info->philos[i], args, info);
+		info->philos[i].l_f = i;
+		info->philos[i].r_f = (i + 1) % info->philo_num;
+		info->philos[i].info = info;
 	}
 }

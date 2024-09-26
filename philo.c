@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:50:55 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 16:57:04 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/26 18:38:08 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	join_threads(t_info *info)
 			exit (2);
 		info->philos[i].last_meal = get_ctime();
 	}
-	overlord(info);
+	if (info->philo_num > 1)
+		overlord(info);
 	i = -1;
 	while (++i < info->philo_num)
 		pthread_join(info->philos[i].thread, NULL);

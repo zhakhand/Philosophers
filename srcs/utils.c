@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:38:32 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 16:49:57 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/26 18:40:29 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,15 @@ int	ft_strcmp(char const *s1, char const *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-long	get_ctime(void)
+long long	get_ctime(void)
 {
 	struct timeval t;
 	
-	if (gettimeofday(&t, NULL) == -1)
-		printf("Wrong time!\n");
-	return ((long long)t.tv_sec * 1000 + (long long)t.tv_usec / 1000);
+	gettimeofday(&t, NULL);
+	return (((long long)t.tv_sec * 1000) + ((long long)t.tv_usec / 1000));
 }
 
-long	ft_usleep(int ms)
+long long	ft_usleep(long long ms)
 {
 	int	s_time;
 
