@@ -6,20 +6,11 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:38:24 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/25 14:59:20 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:44:54 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-
-int	check_if_died(t_philo *philo)
-{
-	pthread_mutex_lock(philo->dead);
-	if (*philo->died)
-		return (pthread_mutex_unlock(philo->dead), 0);
-	pthread_mutex_unlock(philo->dead);
-	return (1);
-}
 
 int	valid_arg(char *s)
 {

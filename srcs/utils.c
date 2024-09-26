@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:38:32 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/25 16:23:46 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:49:57 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_strcmp(char const *s1, char const *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-int	get_ctime(void)
+long	get_ctime(void)
 {
 	struct timeval t;
 	
@@ -31,7 +31,7 @@ int	get_ctime(void)
 	return ((long long)t.tv_sec * 1000 + (long long)t.tv_usec / 1000);
 }
 
-int	ft_usleep(int ms)
+long	ft_usleep(int ms)
 {
 	int	s_time;
 
