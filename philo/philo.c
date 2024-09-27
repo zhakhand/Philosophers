@@ -59,6 +59,7 @@ int	main(int ac, char **av)
 	info = init_info(av + 1);
 	init_philo(info, av);
 	join_threads(info);
+	destroy_all(info);
 	free(info);
 	return (0);
 }

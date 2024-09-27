@@ -23,18 +23,21 @@ void	init_mutexes(t_info *info)
 		{
 			while (--i)
 				pthread_mutex_destroy(&info->forks[i]);
+			free(info);
 			exit(1);
 		}
 	}
 	if (pthread_mutex_init(&(info->is_eating), NULL))
 	{
 		destroy_forks(info);
+		free(info);
 		exit(1);
 	}
 	if (pthread_mutex_init(&(info->is_writing), NULL))
 	{
 		pthread_mutex_destroy(&info->is_eating);
 		destroy_forks(info);
+		free(info);
 		exit(1);
 	}
 }

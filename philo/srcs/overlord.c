@@ -19,6 +19,7 @@ void	all_ate(t_info *info)
 
 	i = 0;
 	count = 0;
+	pthread_mutex_lock(&info->is_eating);
 	while (info->philos[i].num_to_eat != -1 && i < info->philo_num)
 	{
 		if (info->philos[i].meals_eaten >= info->philos[i].num_to_eat)
@@ -26,9 +27,10 @@ void	all_ate(t_info *info)
 		i++;
 	}
 	if (count == info->philo_num)
-		info->all_full = 1;
+		info->all_full = 1; // create a mutex for this?
+	pthread_mutex_unlock(&info->is_eating);
 }
-
+//try creating a mutx for full and dead
 void	overlord(t_info *info)
 {
 	int		i;
@@ -45,7 +47,7 @@ void	overlord(t_info *info)
 			philos[i].time_to_die && !philos[i].is_eating)
 			{
 				is_doing("died", &philos[i]);
-				info->one_dead = 1;
+				info->one_dead = 1; //this too?
 				pthread_mutex_unlock(&info->is_eating);
 				break ;
 			}
@@ -55,5 +57,4 @@ void	overlord(t_info *info)
 			break ;
 		all_ate(info);
 	}
-	destroy_all(info);
 }

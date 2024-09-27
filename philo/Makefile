@@ -34,3 +34,4 @@ fclean: clean
 re:		fclean all
 
 .PHONY:	all clean fclean re
+# -fsanitize=thread -g -O1 -o program -lpthread

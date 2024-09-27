@@ -15,7 +15,7 @@
 void	is_doing(char *msg, t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->info->is_writing));
-	if (!philo->info->one_dead)
+	if (!philo->info->one_dead && !philo->info->all_full)
 		printf("%lli %d %s\n", get_ctime(philo->info), philo->id, msg);
 	pthread_mutex_unlock(&(philo->info->is_writing));
 }
@@ -36,7 +36,7 @@ void	eating(t_philo *philo)
 	int	lower;
 
 	all_ate(philo->info);
-	if (philo->info->all_full)
+	if (philo->info->all_full || philo->info->one_dead)
 		return ;
 	set_forks(&upper, &lower, philo);
 	pthread_mutex_lock(&philo->info->forks[upper]);
@@ -71,8 +71,6 @@ void	*routine(void *data)
 	{
 		eating(philo);
 		if (philo->info->one_dead)
-			break ;
-		if (philo->info->all_full)
 			break ;
 		is_doing("is sleeping", philo);
 		ft_usleep(philo->time_to_sleep, philo->info);

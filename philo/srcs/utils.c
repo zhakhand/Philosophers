@@ -52,14 +52,14 @@ void	destroy_forks(t_info *info)
 
 void	destroy_all(t_info *info)
 {
-	int	k;
+	// int	k;
 
-	k = -1;
-	while (++k < info->philo_num)
-		pthread_mutex_unlock(&info->forks[k]);
-	pthread_mutex_unlock(&info->is_eating);
-	pthread_mutex_destroy(&info->is_eating);
-	pthread_mutex_unlock(&info->is_writing);
-	pthread_mutex_destroy(&info->is_writing);
+	// k = -1;
+	// while (++k < info->philo_num)
+	// 	pthread_mutex_unlock(&info->forks[k]);
 	destroy_forks(info);
+	//pthread_mutex_unlock(&info->is_eating);
+	pthread_mutex_destroy(&info->is_eating);
+	//pthread_mutex_unlock(&info->is_writing);
+	pthread_mutex_destroy(&info->is_writing);
 }
