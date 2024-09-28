@@ -26,3 +26,6 @@ Monitoring:
 In order to survive Philosophers need:
 1. Time to die == Time to Eat + Time to sleep + 10 (If even)
 2. Time to die == (Time to Eat * 4) + 10 (If odd)
+
+Solving data races:
+1. Create a mutex for each important part of the information: output, incrementing meals eaten, state of the Philosopher and state of the Program.
