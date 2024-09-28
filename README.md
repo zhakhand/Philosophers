@@ -29,3 +29,9 @@ In order to survive Philosophers need:
 
 Solving data races:
 1. Create a mutex for each important part of the information: output, incrementing meals eaten, state of the Philosopher and state of the Program.
+
+
+Possible solutions for bonus:
+Forks are semaphores now and each philosopher is a process.
+1. Implement a waiter(Observer) that passes forks to a philosopher and controls the process.
+2. In process of figuring it out
