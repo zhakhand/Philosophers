@@ -12,6 +12,31 @@
 
 #include "../include/philo.h"
 
+void	init_other(t_info *info)
+{
+	if (pthread_mutex_init(&(info->is_eating), NULL))
+	{
+		destroy_forks(info);
+		free(info);
+		exit(1);
+	}
+	if (pthread_mutex_init(&(info->is_writing), NULL))
+	{
+		pthread_mutex_destroy(&info->is_eating);
+		destroy_forks(info);
+		free(info);
+		exit(1);
+	}
+	if (pthread_mutex_init(&(info->is_finished), NULL))
+	{
+		pthread_mutex_destroy(&info->is_eating);
+		pthread_mutex_destroy(&info->is_writing);
+		destroy_forks(info);
+		free(info);
+		exit(1);
+	}
+}
+
 void	init_mutexes(t_info *info)
 {
 	int	i;
@@ -27,19 +52,7 @@ void	init_mutexes(t_info *info)
 			exit(1);
 		}
 	}
-	if (pthread_mutex_init(&(info->is_eating), NULL))
-	{
-		destroy_forks(info);
-		free(info);
-		exit(1);
-	}
-	if (pthread_mutex_init(&(info->is_writing), NULL))
-	{
-		pthread_mutex_destroy(&info->is_eating);
-		destroy_forks(info);
-		free(info);
-		exit(1);
-	}
+	init_other(info);
 }
 
 void	apply_args(t_philo *philo, char **args)

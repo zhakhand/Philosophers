@@ -42,6 +42,7 @@ typedef struct s_info
 	long long		start;
 	pthread_mutex_t	is_eating;
 	pthread_mutex_t	is_writing;
+	pthread_mutex_t	is_finished;
 	pthread_mutex_t	forks[200];
 	t_philo			philos[200];
 }				t_info;
@@ -58,6 +59,7 @@ void		is_doing(char *msg, t_philo *philo);
 /*OVERSEER*/
 void		overlord(t_info *info);
 void		all_ate(t_info *info);
+int			exp_ended(t_info *info);
 /*UTILS*/
 char		*ft_itoa(int n);
 int			ft_atoi(char const *str);

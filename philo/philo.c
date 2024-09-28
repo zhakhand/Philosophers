@@ -36,7 +36,7 @@ void	join_threads(t_info *info)
 	{
 		if (pthread_create(&info->philos[i].thread, \
 		NULL, &routine, &info->philos[i]))
-			return (destroy_all(info));
+			return ;
 	}
 	if (info->philo_num > 1)
 		overlord(info);
@@ -44,7 +44,7 @@ void	join_threads(t_info *info)
 	while (++i < info->philo_num)
 	{
 		if (pthread_join(info->philos[i].thread, NULL))
-			return (destroy_all(info));
+			return ;
 	}
 }
 

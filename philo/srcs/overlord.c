@@ -12,6 +12,15 @@
 
 #include "../include/philo.h"
 
+int	exp_ended(t_info *info)
+{
+	int	end;
+
+	pthread_mutex_lock(&info->is_finished);
+	end = (info->all_full || info->one_dead);
+	return (pthread_mutex_unlock(&info->is_finished), end);
+}
+
 void	all_ate(t_info *info)
 {
 	int		i;
@@ -27,33 +36,37 @@ void	all_ate(t_info *info)
 		i++;
 	}
 	if (count == info->philo_num)
-		info->all_full = 1; // create a mutex for this?
+	{
+		pthread_mutex_lock(&info->is_finished);
+		info->all_full = 1;
+		pthread_mutex_unlock(&info->is_finished);
+	}
 	pthread_mutex_unlock(&info->is_eating);
 }
-//try creating a mutx for full and dead
+
 void	overlord(t_info *info)
 {
 	int		i;
-	t_philo	*philos;
 
-	philos = info->philos;
 	while (!info->all_full)
 	{
 		i = -1;
 		while (++i < info->philo_num && !info->one_dead)
 		{
 			pthread_mutex_lock(&info->is_eating);
-			if (get_ctime(info) - philos[i].last_meal > \
-			philos[i].time_to_die && !philos[i].is_eating)
+			if (get_ctime(info) - info->philos[i].last_meal > \
+			info->philos[i].time_to_die && !info->philos[i].is_eating)
 			{
-				is_doing("died", &philos[i]);
-				info->one_dead = 1; //this too?
+				is_doing("died", &info->philos[i]);
+				pthread_mutex_lock(&info->is_finished);
+				info->one_dead = 1;
+				pthread_mutex_unlock(&info->is_finished);
 				pthread_mutex_unlock(&info->is_eating);
 				break ;
 			}
 			pthread_mutex_unlock(&info->is_eating);
 		}
-		if (info->one_dead)
+		if (exp_ended(info))
 			break ;
 		all_ate(info);
 	}

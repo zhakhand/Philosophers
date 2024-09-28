@@ -15,7 +15,7 @@
 void	is_doing(char *msg, t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->info->is_writing));
-	if (!philo->info->one_dead && !philo->info->all_full)
+	if (!exp_ended(philo->info))
 		printf("%lli %d %s\n", get_ctime(philo->info), philo->id, msg);
 	pthread_mutex_unlock(&(philo->info->is_writing));
 }
@@ -35,17 +35,14 @@ void	eating(t_philo *philo)
 	int	upper;
 	int	lower;
 
-	all_ate(philo->info);
-	if (philo->info->all_full || philo->info->one_dead)
-		return ;
 	set_forks(&upper, &lower, philo);
 	pthread_mutex_lock(&philo->info->forks[upper]);
 	is_doing("has taken a fork", philo);
 	pthread_mutex_lock(&philo->info->forks[lower]);
 	is_doing("has taken a fork", philo);
+	pthread_mutex_lock(&philo->info->is_eating);
 	philo->is_eating = 1;
 	is_doing("is eating", philo);
-	pthread_mutex_lock(&philo->info->is_eating);
 	philo->last_meal = get_ctime(philo->info);
 	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->info->is_eating);
@@ -65,12 +62,10 @@ void	*routine(void *data)
 		one_philo(philo);
 		return (NULL);
 	}
-	while ((!philo->info->one_dead && \
-	get_ctime(philo->info) - philo->last_meal < \
-	philo->time_to_die) || !philo->info->all_full)
+	while (!exp_ended(philo->info))
 	{
 		eating(philo);
-		if (philo->info->one_dead)
+		if (exp_ended(philo->info))
 			break ;
 		is_doing("is sleeping", philo);
 		ft_usleep(philo->time_to_sleep, philo->info);

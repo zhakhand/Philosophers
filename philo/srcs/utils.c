@@ -36,7 +36,7 @@ long long	ft_usleep(long long ms, t_info *info)
 	int	s_time;
 
 	s_time = get_ctime(info);
-	while (!info->one_dead && get_ctime(info) - s_time < ms)
+	while (get_ctime(info) - s_time < ms)
 		usleep(100);
 	return (0);
 }
@@ -52,14 +52,8 @@ void	destroy_forks(t_info *info)
 
 void	destroy_all(t_info *info)
 {
-	// int	k;
-
-	// k = -1;
-	// while (++k < info->philo_num)
-	// 	pthread_mutex_unlock(&info->forks[k]);
 	destroy_forks(info);
-	//pthread_mutex_unlock(&info->is_eating);
+	pthread_mutex_destroy(&info->is_finished);
 	pthread_mutex_destroy(&info->is_eating);
-	//pthread_mutex_unlock(&info->is_writing);
 	pthread_mutex_destroy(&info->is_writing);
 }
