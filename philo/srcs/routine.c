@@ -64,6 +64,7 @@ void	*routine(void *data)
 	}
 	while (!exp_ended(philo->info))
 	{
+		is_doing("is thinking", philo);
 		eating(philo);
 		if (exp_ended(philo->info))
 			break ;

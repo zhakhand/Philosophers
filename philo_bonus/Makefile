@@ -1,10 +1,10 @@
 SRCS = srcs/check.c srcs/ft_atoi.c srcs/ft_itoa.c \
 srcs/overlord.c srcs/philo_init.c srcs/routine.c \
-srcs/utils.c philo.c
+srcs/utils.c philo_bonus.c
 
-HEAD = include/philo.h 
+HEAD = include/philo_bonus.h 
 
-NAME = philo
+NAME = philo_bonus
 
 CC = cc
 
@@ -20,16 +20,16 @@ all: ${NAME}
 		@echo "Compiling $<..."
 		${CC} ${CFLAGS} -c $? -o $@
 
-${NAME}:	philo
+${NAME}:	philo_bonus
 
-philo:	philo.o
-		${CC} ${CFLAGS} -fsanitize=thread -g -O1 ${SRCS} -o philo -lpthread
+philo_bonus:	philo_bonus.o
+		${CC} ${CFLAGS} -fsanitize=thread -g -O1 ${SRCS} -o philo_bonus -lpthread
 
 clean:
 		${RM} ${OBJS}
 
 fclean: clean
-		${RM} philo
+		${RM} philo_bonus
 
 re:		fclean all
 
