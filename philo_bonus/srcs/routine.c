@@ -1,5 +1,8 @@
 #include "../include/philo_bonus.h"
 
+
+/*EACH PHILOSPHERS SENDS A SIGNAL WHEN THEY DIE OR FULL*/
+
 void	is_doing(char *msg, t_philo *philo)
 {
 	sem_wait((philo->info->is_writing));
