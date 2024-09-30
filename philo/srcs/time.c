@@ -1,32 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 12:38:32 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/30 15:04:38 by dzhakhan         ###   ########.fr       */
+/*   Created: 2024/09/30 18:19:52 by dzhakhan          #+#    #+#             */
+/*   Updated: 2024/09/30 18:32:31 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo_bonus.h"
+#include "../include/philo.h"
 
-int	ft_strcmp(char const *s1, char const *s2)
+void	safe_gettime(struct timeval *t, t_info *info)
 {
-	while (*s1 && *s2 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	pthread_mutex_lock(&info->time_mut);
+	gettimeofday(t, NULL);
+	pthread_mutex_unlock(&info->time_mut);
 }
 
 long long	get_ctime(t_info *info)
 {
 	struct timeval	t;
 
-	gettimeofday(&t, NULL);
+	safe_gettime(&t, info);
 	return ((((long long)t.tv_sec * 1000) + \
 	((long long)t.tv_usec / 1000)) - (long long)info->start);
 }

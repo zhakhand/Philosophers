@@ -4,7 +4,7 @@ int	valid_arg(char *s)
 {
 	char	*num;
 
-	if (ft_atoi(s) < 0)
+	if (ft_atoi(s) <= 0)
 		return (0);
 	num = ft_itoa(ft_atoi(s));
 	if (!num)

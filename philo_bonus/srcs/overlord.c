@@ -25,7 +25,7 @@ void	*send_signal(void *data)
 			philo->info->one_dead = 1;
 			return (sem_post(philo->info->dead_full), sem_post(philo->info->is_eating), sem_post(philo->info->is_finished), NULL);
 		}
-		if (philo->meals_eaten != -1 && philo->meals_eaten >= philo->num_to_eat)
+		if (philo->num_to_eat != -1 && philo->meals_eaten >= philo->num_to_eat)
 		{
 			if (!philo->is_full)
 			{

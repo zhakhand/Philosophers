@@ -1,6 +1,6 @@
 SRCS = srcs/check.c srcs/ft_atoi.c srcs/ft_itoa.c \
 srcs/overlord.c srcs/philo_init.c srcs/routine.c \
-srcs/utils.c philo.c
+srcs/utils.c srcs/time.c srcs/philo.c
 
 HEAD = include/philo.h 
 
@@ -10,20 +10,18 @@ CC = cc
 
 RM = rm -f
 
-OBJS = ${SRCS:%.c=%.o}
+OBJS = ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
 all: ${NAME}
 
 %.o:	%.c
 		@echo "Compiling $<..."
-		${CC} ${CFLAGS} -c $? -o $@
+		${CC} ${CFLAGS} -c $< -o $@
 
-${NAME}:	philo
-
-philo:	philo.o
-		${CC} ${CFLAGS} -fsanitize=thread -g -O1 ${SRCS} -o philo -lpthread
+${NAME}: $(OBJS)
+		${CC} ${CFLAGS} ${OBJS} -o $@
 
 clean:
 		${RM} ${OBJS}
@@ -34,4 +32,5 @@ fclean: clean
 re:		fclean all
 
 .PHONY:	all clean fclean re
+# Too slow with valgrind for some reason so to check for data races use this commands
 # -fsanitize=thread -g -O1 -o program -lpthread

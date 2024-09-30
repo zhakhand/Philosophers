@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:43:51 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 17:43:06 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:18:01 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,19 @@ typedef struct s_info
 	int				one_dead;
 	int				all_full;
 	int				philo_num;
+	int				to_eat;
 	long long		start;
 	pthread_mutex_t	is_eating;
 	pthread_mutex_t	is_writing;
 	pthread_mutex_t	is_finished;
-	pthread_mutex_t	forks[200];
-	t_philo			philos[200];
+	pthread_mutex_t	time_mut;
+	pthread_mutex_t	*forks;
+	t_philo			*philos;
 }				t_info;
 
 /*INITIALIZE*/
 t_info		*init_info(char **args);
-void		init_philo(t_info *info, char **args);
+int			init_philo(t_info *info, char **args);
 /*TIMESTAMP*/
 long long	get_ctime(t_info *info);
 long long	ft_usleep(long long ms, t_info *info);

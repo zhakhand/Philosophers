@@ -6,26 +6,11 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 12:50:55 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 18:38:08 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:28:58 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/philo.h"
-
-t_info	*init_info(char **args)
-{
-	t_info			*info;
-
-	info = malloc(sizeof(t_info));
-	if (!info)
-		exit(2);
-	info->one_dead = 0;
-	info->all_full = 0;
-	info->start = 0;
-	info->start = get_ctime(info);
-	info->philo_num = ft_atoi(args[0]);
-	return (info);
-}
+#include "../include/philo.h"
 
 void	join_threads(t_info *info)
 {
@@ -52,14 +37,18 @@ int	main(int ac, char **av)
 {
 	t_info	*info;
 
-	if (ac < 5 || ac > 7)
+	if (ac < 5 || ac > 6)
 		return (0);
 	if (!check_args(av + 1))
 		return (0);
 	info = init_info(av + 1);
-	init_philo(info, av);
+	if (!info)
+		return (1);
+	if (!init_philo(info, av))
+		return (1);
 	join_threads(info);
 	destroy_all(info);
+	free(info->philos);
 	free(info);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:38:24 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 16:44:54 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:28:19 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	valid_arg(char *s)
 {
 	char	*num;
 
-	if (ft_atoi(s) < 0)
+	if (ft_atoi(s) <= 0)
 		return (0);
 	num = ft_itoa(ft_atoi(s));
 	if (!num)
@@ -40,15 +40,4 @@ int	check_args(char **args)
 	if (ft_atoi(args[0]) <= 0)
 		return (0);
 	return (1);
-}
-
-void	set_forks(int *upper, int *lower, t_philo *philo)
-{
-	*upper = philo->l_f;
-	*lower = philo->r_f;
-	if (philo->id % 2)
-	{
-		*upper = philo->r_f;
-		*lower = philo->l_f;
-	}
 }

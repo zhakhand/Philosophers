@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 14:40:37 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/26 18:40:38 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:05:49 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	all_ate(t_info *info)
 	i = 0;
 	count = 0;
 	pthread_mutex_lock(&info->is_eating);
-	while (info->philos[i].num_to_eat != -1 && i < info->philo_num)
+	while (info->to_eat != -1 && i < info->philo_num)
 	{
 		if (info->philos[i].meals_eaten >= info->philos[i].num_to_eat)
 			count++;
@@ -69,5 +69,6 @@ void	overlord(t_info *info)
 		if (exp_ended(info))
 			break ;
 		all_ate(info);
+		usleep(1);
 	}
 }
