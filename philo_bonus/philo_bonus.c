@@ -17,7 +17,7 @@ t_info	*init_info(char **args)
 
 void    free_all(t_info *info)
 {
-    int i;
+    int     i;
 
     i = -1;
     while (++i < info->philo_num)
@@ -30,14 +30,13 @@ void    free_all(t_info *info)
     sem_unlink("/is_writing");
     sem_unlink("/is_finished");
     sem_unlink("/forks");
-    free(info);
 }
 
 int	main(int ac, char **av)
 {
-	t_info	*info;
-    pthread_t   overseer;
-    int     i;
+	t_info	    *info;
+    //pthread_t   overseer;
+    int         i;
 
     i = -1;
 	if (ac < 5 || ac > 7)
@@ -56,11 +55,11 @@ int	main(int ac, char **av)
 			exit(0);
 		}
     }
-    if (info->philo_num > 1)
-    {
-        pthread_create(&overseer, NULL, &monitor, info);
-        pthread_detach(overseer);
-    }
+    // if (info->philo_num > 1)
+    // {
+    //     pthread_create(&overseer, NULL, &monitor, info);
+    //     pthread_detach(overseer);
+    // }
     sem_wait(info->is_finished);
     free_all(info);
 	return (0);

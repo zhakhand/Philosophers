@@ -1,6 +1,6 @@
 SRCS = srcs/check.c srcs/ft_atoi.c srcs/ft_itoa.c \
 srcs/overlord.c srcs/philo_init.c srcs/routine.c \
-srcs/utils.c philo_bonus.c
+srcs/utils.c srcs/ft_strjoin.c philo_bonus.c
 
 HEAD = include/philo_bonus.h 
 

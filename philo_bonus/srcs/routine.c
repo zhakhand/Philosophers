@@ -1,6 +1,5 @@
 #include "../include/philo_bonus.h"
 
-
 /*EACH PHILOSPHERS SENDS A SIGNAL WHEN THEY DIE OR FULL*/
 
 void	is_doing(char *msg, t_philo *philo)
@@ -42,11 +41,15 @@ void	eating(t_philo *philo)
 
 void	routine(t_philo *philo)
 {
+	pthread_t	monitor;
+
 	if (philo->info->philo_num == 1)
 	{
 		one_philo(philo);
 		return ;
 	}
+	pthread_create(&monitor, NULL, &send_signal, philo);
+	pthread_detach(monitor);
 	while (!exp_ended(philo->info))
 	{
 		is_doing("is thinking", philo);
@@ -54,6 +57,7 @@ void	routine(t_philo *philo)
 		if (exp_ended(philo->info))
 		{
 			sem_post(philo->info->is_finished);
+			break ;
 		}
 		is_doing("is sleeping", philo);
 		ft_usleep(philo->time_to_sleep, philo->info);

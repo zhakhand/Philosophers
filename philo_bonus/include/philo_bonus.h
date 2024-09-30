@@ -16,6 +16,7 @@ typedef struct s_philo
 	int				l_f;
 	int				r_f;
 	int				is_eating;
+	int				is_full;
 	int				meals_eaten;
 	int				num_to_eat;
 	long long		time_to_eat;
@@ -34,6 +35,7 @@ typedef struct s_info
 	sem_t			*is_eating;
 	sem_t			*is_writing;
 	sem_t			*is_finished;
+	sem_t			*dead_full;
 	sem_t			*forks;
 	t_philo			philos[200];
 }				t_info;
@@ -49,12 +51,14 @@ void		routine(t_philo *philo);
 void		is_doing(char *msg, t_philo *philo);
 /*OVERSEER*/
 void		overlord(t_info *info);
+void		*send_signal(void *data);
 void		*monitor(void *data);
 void		all_ate(t_info *info);
 int			exp_ended(t_info *info);
 /*UTILS*/
 char		*ft_itoa(int n);
 int			ft_atoi(char const *str);
+char		*ft_strjoin(char *s1, char *s2);
 int			check_args(char **args);
 int			ft_strcmp(char const *s1, char const *s2);
 void		set_forks(int *upper, int *lower, t_philo *philo);

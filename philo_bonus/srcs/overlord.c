@@ -4,59 +4,53 @@ int	exp_ended(t_info *info)
 {
 	int	end;
 
-	end = (info->all_full || info->one_dead);
+	sem_wait(info->dead_full);
+	end = (info->all_full == 5 || info->one_dead);
+	sem_post(info->dead_full);
     return (end);
 }
 
-void	all_ate(t_info *info)
+void	*send_signal(void *data)
 {
-	int		i;
-	int		count;
+	t_philo	*philo;
 
-	i = 0;
-	count = 0;
-    sem_wait(info->is_eating);
-	while (info->philos[i].num_to_eat != -1 && i < info->philo_num)
+	philo = (t_philo *)data;
+	while (1)
 	{
-		if (info->philos[i].meals_eaten >= info->philos[i].num_to_eat)
-			count++;
-		i++;
+		sem_wait(philo->info->dead_full);
+		sem_wait(philo->info->is_eating);
+		if (get_ctime(philo->info) - philo->last_meal >= philo->time_to_die && !philo->is_eating)
+		{
+			is_doing("died", philo);
+			philo->info->one_dead = 1;
+			return (sem_post(philo->info->dead_full), sem_post(philo->info->is_eating), sem_post(philo->info->is_finished), NULL);
+		}
+		if (philo->meals_eaten != -1 && philo->meals_eaten >= philo->num_to_eat)
+		{
+			if (!philo->is_full)
+			{
+				philo->is_full = 1;
+				philo->info->all_full++;
+			}
+			if (philo->info->all_full == 5)
+				return (sem_post(philo->info->dead_full), sem_post(philo->info->is_eating), sem_post(philo->info->is_finished), NULL);
+		}
+		sem_post(philo->info->is_eating);
+		sem_post(philo->info->dead_full);
+		usleep(1000);
 	}
-    sem_post(info->is_eating);
-	if (count == info->philo_num)
-	{
-		info->all_full = 1;
-	}
+	return (NULL);
 }
 
 void    *monitor(void *data)
 {
     t_info  *info;
-    int     i;
 
     info = (t_info *)data;
     while(!exp_ended(info))
-    {
-        i = -1;
-        while(++i < info->philo_num && !info->one_dead)
-        {
-            sem_wait(info->is_eating);
-            if (get_ctime(info) - info->philos[i].last_meal > \
-            info->philos[i].time_to_die && !info->philos[i].is_eating)
-            {
-                is_doing("died", &info->philos[i]);
-                info->one_dead = 1;
-                sem_post(info->is_eating);
-                break ;
-            }
-            sem_post(info->is_eating);
-        }
-        if (exp_ended(info))
-        {
-            sem_post(info->is_finished);
-            break ;
-        }
-        all_ate(info);
+    { 
+    	sem_wait(info->is_finished);
     }
+	sem_post(info->is_finished);
     return (NULL);
 }
