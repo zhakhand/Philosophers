@@ -12,6 +12,12 @@
 
 #include "../include/philo.h"
 
+/**********************************************/
+/* Usage of exit() is prohibited in mandatory */
+/* so be sure to find a way to close program  */
+/* in case of an error                        */
+/**********************************************/
+
 int	init_other(t_info *info)
 {
 	if (pthread_mutex_init(&(info->is_eating), NULL))
@@ -65,10 +71,6 @@ void	apply_args(t_philo *philo, char **args)
 	philo->time_to_die = ft_atoi(args[2]);
 	philo->time_to_eat = ft_atoi(args[3]);
 	philo->time_to_sleep = ft_atoi(args[4]);
-	if (args[5])
-		philo->num_to_eat = ft_atoi(args[5]);
-	else
-		philo->num_to_eat = -1;
 	philo->meals_eaten = 0;
 	philo->last_meal = philo->info->start;
 	philo->is_eating = 0;
@@ -89,8 +91,8 @@ int	init_philo(t_info *info, char **args)
 		info->philos[i].info = info;
 		info->philos[i].id = i + 1;
 		apply_args(&info->philos[i], args);
-		info->philos[i].l_f = i;
-		info->philos[i].r_f = (i + 1) % info->philo_num;
+		info->philos[i].left_fork = i;
+		info->philos[i].right_fork = (i + 1) % info->philo_num;
 	}
 	return (1);
 }
@@ -109,8 +111,8 @@ t_info	*init_info(char **args)
 	info->start = 0;
 	info->start = get_ctime(info);
 	info->philo_num = ft_atoi(args[0]);
-	info->to_eat = -1;
+	info->meal_goal = -1;
 	if (args[4])
-		info->to_eat = ft_atoi(args[4]);
+		info->meal_goal = ft_atoi(args[4]);
 	return (info);
 }

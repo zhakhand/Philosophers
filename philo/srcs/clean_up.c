@@ -1,43 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check.c                                            :+:      :+:    :+:   */
+/*   clean_up.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 12:38:24 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/09/30 18:28:19 by dzhakhan         ###   ########.fr       */
+/*   Created: 2024/09/30 22:16:02 by dzhakhan          #+#    #+#             */
+/*   Updated: 2024/09/30 22:16:02 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	valid_arg(char *s)
-{
-	char	*num;
-
-	if (ft_atoi(s) <= 0)
-		return (0);
-	num = ft_itoa(ft_atoi(s));
-	if (!num)
-		return (free(num), 0);
-	if (ft_strcmp(num, s))
-		return (free(num), 0);
-	free(num);
-	return (1);
-}
-
-int	check_args(char **args)
+void	destroy_forks(t_info *info)
 {
 	int	i;
 
 	i = -1;
-	while (args[++i])
-	{
-		if (!valid_arg(args[i]))
-			return (0);
-	}
-	if (ft_atoi(args[0]) <= 0)
-		return (0);
-	return (1);
+	while (++i < info->philo_num)
+		pthread_mutex_destroy(&info->forks[i]);
+	free(info->forks);
+}
+
+void	destroy_all(t_info *info)
+{
+	destroy_forks(info);
+	pthread_mutex_destroy(&info->time_mut);
+	pthread_mutex_destroy(&info->is_finished);
+	pthread_mutex_destroy(&info->is_eating);
+	pthread_mutex_destroy(&info->is_writing);
 }

@@ -12,14 +12,14 @@
 
 #include "../include/philo.h"
 
-void	set_forks(int *upper, int *lower, t_philo *philo)
+void	set_forks(int *first, int *second, t_philo *philo)
 {
-	*upper = philo->l_f;
-	*lower = philo->r_f;
+	*first = philo->left_fork;
+	*second = philo->right_fork;
 	if (philo->id % 2)
 	{
-		*upper = philo->r_f;
-		*lower = philo->l_f;
+		*first = philo->right_fork;
+		*second = philo->left_fork;
 	}
 }
 
@@ -33,21 +33,60 @@ int	ft_strcmp(char const *s1, char const *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-void	destroy_forks(t_info *info)
+int	ft_atoi(char const *str)
+{
+	int		result;
+	int		sign;
+	long	last;
+
+	result = 0;
+	sign = 1;
+	last = 0;
+	while (*str == 32 || (*str > 8 && *str < 14))
+		str++;
+	if (*str == 43 || *str == 45)
+	{
+		if (*str == 45)
+			sign *= -1;
+		str++;
+	}
+	while (*str > 47 && *str < 58)
+	{
+		if (last != (last * 10 + *str - '0') / 10)
+			return ((sign >= 0) * -1);
+		last = last * 10 + *str - '0';
+		result = result * 10 + *str - '0';
+		str++;
+	}
+	return (result * sign);
+}
+
+int	valid_arg(char *s)
+{
+	char	*num;
+
+	if (ft_atoi(s) <= 0)
+		return (0);
+	num = ft_itoa(ft_atoi(s));
+	if (!num)
+		return (free(num), 0);
+	if (ft_strcmp(num, s))
+		return (free(num), 0);
+	free(num);
+	return (1);
+}
+
+int	check_args(char **args)
 {
 	int	i;
 
 	i = -1;
-	while (++i < info->philo_num)
-		pthread_mutex_destroy(&info->forks[i]);
-	free(info->forks);
-}
-
-void	destroy_all(t_info *info)
-{
-	destroy_forks(info);
-	pthread_mutex_destroy(&info->time_mut);
-	pthread_mutex_destroy(&info->is_finished);
-	pthread_mutex_destroy(&info->is_eating);
-	pthread_mutex_destroy(&info->is_writing);
+	while (args[++i])
+	{
+		if (!valid_arg(args[i]))
+			return (0);
+	}
+	if (ft_atoi(args[0]) <= 0)
+		return (0);
+	return (1);
 }

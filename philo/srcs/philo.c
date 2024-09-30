@@ -12,6 +12,14 @@
 
 #include "../include/philo.h"
 
+/************************************************/
+/* 1.Initiate variables after checking arguments*/
+/* 2.Create threads that will run the routine   */
+/* 3.Launch a monitor/overseer to check for each*/
+/*   philosophers vitals                        */
+/* 4. Close threads and free/destroy everything */
+/************************************************/
+
 void	join_threads(t_info *info)
 {
 	int			i;
@@ -24,7 +32,7 @@ void	join_threads(t_info *info)
 			return ;
 	}
 	if (info->philo_num > 1)
-		overlord(info);
+		overseer(info);
 	i = -1;
 	while (++i < info->philo_num)
 	{

@@ -12,6 +12,13 @@
 
 #include "../include/philo.h"
 
+/******************************************/
+/*would be a good practice to also protect*/
+/*     gettimeofday(t, *) with mutexes    */
+/* to prevent threads accessing it at once*/
+/*(though it doesn't make much difference)*/
+/**************************************** */
+
 void	safe_gettime(struct timeval *t, t_info *info)
 {
 	pthread_mutex_lock(&info->time_mut);
@@ -28,12 +35,12 @@ long long	get_ctime(t_info *info)
 	((long long)t.tv_usec / 1000)) - (long long)info->start);
 }
 
-long long	ft_usleep(long long ms, t_info *info)
+long long	ft_usleep(long long milliseconds, t_info *info)
 {
-	int	s_time;
+	int	start_time;
 
-	s_time = get_ctime(info);
-	while (get_ctime(info) - s_time < ms)
+	start_time = get_ctime(info);
+	while (get_ctime(info) - start_time < milliseconds)
 		usleep(100);
 	return (0);
 }

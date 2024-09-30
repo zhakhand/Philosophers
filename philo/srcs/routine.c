@@ -15,30 +15,25 @@
 void	is_doing(char *msg, t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->info->is_writing));
-	if (!exp_ended(philo->info))
+	if (!experiment_ended(philo->info))
 		printf("%lli %d %s\n", get_ctime(philo->info), philo->id, msg);
 	pthread_mutex_unlock(&(philo->info->is_writing));
 }
 
-void	one_philo(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->info->forks[0]);
-	is_doing("has taken a fork", philo);
-	ft_usleep(philo->time_to_die, philo->info);
-	is_doing("died", philo);
-	pthread_mutex_unlock(&philo->info->forks[0]);
-	philo->info->one_dead = 1;
-}
-
+/********************************************************/
+/* Even numbered philosophers take the left fork first  */
+/*    while odd ones take the right fork.               */
+/*		this ensures synchronisation                    */
+/********************************************************/
 void	eating(t_philo *philo)
 {
-	int	upper;
-	int	lower;
+	int	first;
+	int	second;
 
-	set_forks(&upper, &lower, philo);
-	pthread_mutex_lock(&philo->info->forks[upper]);
+	set_forks(&first, &second, philo);
+	pthread_mutex_lock(&philo->info->forks[first]);
 	is_doing("has taken a fork", philo);
-	pthread_mutex_lock(&philo->info->forks[lower]);
+	pthread_mutex_lock(&philo->info->forks[second]);
 	is_doing("has taken a fork", philo);
 	pthread_mutex_lock(&philo->info->is_eating);
 	philo->is_eating = 1;
@@ -48,8 +43,21 @@ void	eating(t_philo *philo)
 	pthread_mutex_unlock(&philo->info->is_eating);
 	ft_usleep(philo->time_to_eat, philo->info);
 	philo->is_eating = 0;
-	pthread_mutex_unlock(&philo->info->forks[upper]);
-	pthread_mutex_unlock(&philo->info->forks[lower]);
+	pthread_mutex_unlock(&philo->info->forks[first]);
+	pthread_mutex_unlock(&philo->info->forks[second]);
+}
+
+/***********************************************/
+/* different behaviour for a single philosopher*/
+/***********************************************/
+void	one_philo(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->info->forks[0]);
+	is_doing("has taken a fork", philo);
+	ft_usleep(philo->time_to_die, philo->info);
+	is_doing("died", philo);
+	pthread_mutex_unlock(&philo->info->forks[0]);
+	philo->info->one_dead = 1;
 }
 
 void	*routine(void *data)
@@ -62,11 +70,11 @@ void	*routine(void *data)
 		one_philo(philo);
 		return (NULL);
 	}
-	while (!exp_ended(philo->info))
+	while (!experiment_ended(philo->info))
 	{
 		is_doing("is thinking", philo);
 		eating(philo);
-		if (exp_ended(philo->info))
+		if (experiment_ended(philo->info))
 			break ;
 		is_doing("is sleeping", philo);
 		ft_usleep(philo->time_to_sleep, philo->info);

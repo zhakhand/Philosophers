@@ -12,7 +12,11 @@
 
 #include "../include/philo.h"
 
-int	exp_ended(t_info *info)
+/****************************************/
+/*Each mutable value should be locked!!!*/
+/****************************************/
+
+int	experiment_ended(t_info *info)
 {
 	int	end;
 
@@ -29,9 +33,9 @@ void	all_ate(t_info *info)
 	i = 0;
 	count = 0;
 	pthread_mutex_lock(&info->is_eating);
-	while (info->to_eat != -1 && i < info->philo_num)
+	while (info->meal_goal != -1 && i < info->philo_num)
 	{
-		if (info->philos[i].meals_eaten >= info->philos[i].num_to_eat)
+		if (info->philos[i].meals_eaten >= info->meal_goal)
 			count++;
 		i++;
 	}
@@ -44,29 +48,36 @@ void	all_ate(t_info *info)
 	pthread_mutex_unlock(&info->is_eating);
 }
 
-void	overlord(t_info *info)
+int	check_for_death(t_info *info)
 {
-	int		i;
+	int	i;
 
+	i = -1;
+	while (++i < info->philo_num && !info->one_dead)
+	{
+		pthread_mutex_lock(&info->is_eating);
+		if (get_ctime(info) - info->philos[i].last_meal > \
+		info->philos[i].time_to_die && !info->philos[i].is_eating)
+		{
+			is_doing("died", &info->philos[i]);
+			pthread_mutex_lock(&info->is_finished);
+			info->one_dead = 1;
+			pthread_mutex_unlock(&info->is_finished);
+			pthread_mutex_unlock(&info->is_eating);
+			return (1);
+		}
+		pthread_mutex_unlock(&info->is_eating);
+	}
+	return (0);
+}
+
+void	overseer(t_info *info)
+{
 	while (!info->all_full)
 	{
-		i = -1;
-		while (++i < info->philo_num && !info->one_dead)
-		{
-			pthread_mutex_lock(&info->is_eating);
-			if (get_ctime(info) - info->philos[i].last_meal > \
-			info->philos[i].time_to_die && !info->philos[i].is_eating)
-			{
-				is_doing("died", &info->philos[i]);
-				pthread_mutex_lock(&info->is_finished);
-				info->one_dead = 1;
-				pthread_mutex_unlock(&info->is_finished);
-				pthread_mutex_unlock(&info->is_eating);
-				break ;
-			}
-			pthread_mutex_unlock(&info->is_eating);
-		}
-		if (exp_ended(info))
+		if (check_for_death(info))
+			break ;
+		if (experiment_ended(info))
 			break ;
 		all_ate(info);
 		usleep(1);

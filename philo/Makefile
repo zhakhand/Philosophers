@@ -1,4 +1,4 @@
-SRCS = srcs/check.c srcs/ft_atoi.c srcs/ft_itoa.c \
+SRCS = srcs/clean_up.c srcs/ft_itoa.c \
 srcs/overlord.c srcs/philo_init.c srcs/routine.c \
 srcs/utils.c srcs/time.c srcs/philo.c
 
@@ -12,7 +12,7 @@ RM = rm -f
 
 OBJS = ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra
 
 all: ${NAME}
 
@@ -32,5 +32,3 @@ fclean: clean
 re:		fclean all
 
 .PHONY:	all clean fclean re
-# Too slow with valgrind for some reason so to check for data races use this commands
-# -fsanitize=thread -g -O1 -o program -lpthread
