@@ -81,7 +81,6 @@ int	main(int ac, char **av)
 		return (free_all(&info), 0);
 	sem_wait(info.is_finished);
 	run_philos(&info);
-	if (av[5] && ft_atoi(av[5]) != -1)
-		overseer(&info);
+	overseer(&info);
 	return (0);
 }
