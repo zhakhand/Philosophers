@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/01 08:53:25 by dzhakhan          #+#    #+#             */
+/*   Updated: 2024/10/01 09:03:41 by dzhakhan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/philo_bonus.h"
 
 /*EACH PHILOSPHERS SENDS A SIGNAL WHEN THEY DIE OR FULL*/
@@ -62,5 +74,6 @@ void	routine(t_philo *philo)
 		is_doing("is sleeping", philo);
 		ft_usleep(philo->time_to_sleep, philo->info);
 		is_doing("is thinking", philo);
+		usleep(1);
 	}
 }

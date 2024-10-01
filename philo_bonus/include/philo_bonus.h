@@ -36,6 +36,7 @@ typedef struct s_info
 	sem_t			*is_writing;
 	sem_t			*is_finished;
 	sem_t			*dead_full;
+	sem_t			*is_full;
 	sem_t			*forks;
 	t_philo			philos[200];
 }				t_info;
