@@ -84,14 +84,15 @@ void	*monitor(void *data)
 	info = (t_info *)data;
 	while (1)
 	{
-		usleep(1);
 		sem_wait(info->is_full);
 		i++;
 		if (i == info->philo_num)
 		{
+			sem_post(info->is_full);
 			sem_post(info->is_finished);
 			break ;
 		}
+		usleep(1);
 	}
 	return (NULL);
 }

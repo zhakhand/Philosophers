@@ -25,7 +25,7 @@ void	init_semaphores(t_info *info)
 	info->is_finished = sem_open("/is_finished", O_CREAT | O_EXCL, 0644, 1);
 	info->dead_full = sem_open("/dead_full", O_CREAT | O_EXCL, 0644, 1);
 	info->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, info->philo_num);
-	info->is_full = sem_open("/is_full", O_CREAT | O_EXCL, 0644, 1);
+	info->is_full = sem_open("/is_full", O_CREAT, 0644, 1);
 }
 
 void	apply_args(t_philo *philo, char **args)
@@ -49,6 +49,9 @@ void	init_philo(t_info *info, char **args)
 
 	i = -1;
 	init_semaphores(info);
+	info->philos = (t_philo *)malloc(sizeof(t_philo) * (info->philo_num + 1));
+	if (!info->philos)
+		return ;
 	while (++i < info->philo_num)
 	{
 		info->philos[i].info = info;
@@ -59,17 +62,14 @@ void	init_philo(t_info *info, char **args)
 	}
 }
 
-t_info	*init_info(char **args)
+t_info	init_info(char **args)
 {
-	t_info			*info;
+	t_info			info;
 
-	info = malloc(sizeof(t_info));
-	if (!info)
-		exit(2);
-	info->one_dead = 0;
-	info->all_full = 0;
-	info->start = 0;
-	info->start = get_ctime(info);
-	info->philo_num = ft_atoi(args[0]);
+	info.one_dead = 0;
+	info.all_full = 0;
+	info.start = 0;
+	info.start = get_ctime(&info);
+	info.philo_num = ft_atoi(args[0]);
 	return (info);
 }

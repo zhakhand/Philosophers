@@ -31,6 +31,8 @@ void	free_all(t_info *info)
 	sem_unlink("/forks");
 	sem_unlink("/dead_full");
 	sem_unlink("/is_full");
+	if (info->philos)
+		free(info->philos);
 }
 
 int	overseer(t_info *info)
@@ -67,16 +69,19 @@ void	run_philos(t_info *info)
 
 int	main(int ac, char **av)
 {
-	t_info	*info;
+	t_info	info;
 
 	if (ac < 5 || ac > 6)
 		return (0);
 	if (!check_args(av + 1))
 		return (0);
 	info = init_info(av + 1);
-	init_philo(info, av);
-	sem_wait(info->is_finished);
-	run_philos(info);
-	overseer(info);
+	init_philo(&info, av);
+	if (!info.philos)
+		return (free_all(&info), 0);
+	sem_wait(info.is_finished);
+	run_philos(&info);
+	if (av[5] && ft_atoi(av[5]) != -1)
+		overseer(&info);
 	return (0);
 }

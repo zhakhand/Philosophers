@@ -50,11 +50,11 @@ typedef struct s_info
 	sem_t			*dead_full;
 	sem_t			*is_full;
 	sem_t			*forks;
-	t_philo			philos[200];
+	t_philo			*philos;
 }				t_info;
 
 /*INITIALIZE*/
-t_info		*init_info(char **args);
+t_info		init_info(char **args);
 void		init_philo(t_info *info, char **args);
 /*TIMESTAMP*/
 long long	get_ctime(t_info *info);
@@ -72,5 +72,6 @@ int			ft_atoi(char const *str);
 int			check_args(char **args);
 int			ft_strcmp(char const *s1, char const *s2);
 /*CLEANUP*/
+void		free_all(t_info *info);
 
 #endif

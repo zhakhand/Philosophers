@@ -19,7 +19,7 @@ RM = rm -f
 
 OBJS = ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Werror -Wextra #-fsanitize=thread -g -O1
+CFLAGS = -Wall -Werror -Wextra
 
 all: ${NAME}
 
