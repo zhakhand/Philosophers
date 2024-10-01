@@ -17,7 +17,7 @@
 void	is_doing(char *msg, t_philo *philo)
 {
 	sem_wait((philo->info->is_writing));
-	if (!exp_ended(philo->info))
+	if (!experiment_ended(philo->info))
 		printf("%lli %d %s\n", get_ctime(philo->info), philo->id, msg);
 	sem_post((philo->info->is_writing));
 }
@@ -62,11 +62,11 @@ void	routine(t_philo *philo)
 	}
 	pthread_create(&monitor, NULL, &send_signal, philo);
 	pthread_detach(monitor);
-	while (!exp_ended(philo->info))
+	while (!experiment_ended(philo->info))
 	{
 		is_doing("is thinking", philo);
 		eating(philo);
-		if (exp_ended(philo->info))
+		if (experiment_ended(philo->info))
 		{
 			sem_post(philo->info->is_finished);
 			break ;

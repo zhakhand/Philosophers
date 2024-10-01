@@ -1,6 +1,13 @@
-SRCS = srcs/check.c srcs/ft_atoi.c srcs/ft_itoa.c \
-srcs/overlord.c srcs/philo_init.c srcs/routine.c \
-srcs/utils.c srcs/ft_strjoin.c srcs/philo_bonus.c
+GREEN=\033[32m
+YELLOW=\033[33m
+RED=\033[31m
+BLUE=\033[34m
+BACK=\033[42m
+BOLD=\033[1m
+RESET=\033[0m
+
+SRCS = srcs/check.c srcs/ft_itoa.c srcs/overlord.c \
+srcs/philo_init.c srcs/routine.c srcs/utils.c srcs/philo_bonus.c
 
 HEAD = include/philo_bonus.h 
 
@@ -12,22 +19,25 @@ RM = rm -f
 
 OBJS = ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Werror -Wextra -fsanitize=thread -g -O1
+CFLAGS = -Wall -Werror -Wextra #-fsanitize=thread -g -O1
 
 all: ${NAME}
 
 %.o:	%.c
-		@echo "Compiling $<..."
-		${CC} ${CFLAGS} -c $? -o $@
+		@echo "${BLUE}${BOLD}Compiling $<${RESET}"
+		@${CC} ${CFLAGS} -c $< -o $@
 
 ${NAME}: ${OBJS}
-		${CC} ${CFLAGS} ${OBJS} -o philo_bonus -lpthread
+		@${CC} ${CFLAGS} ${OBJS} -o $@
+		@echo "${BACK}${RED}${BOLD} Successfuly built ${NAME} ${RESET}"
 
 clean:
-		${RM} ${OBJS}
+		@echo "${YELLOW}${BOLD}Deleting object files${RESET}" 
+		@${RM} ${OBJS}
 
 fclean: clean
-		${RM} philo_bonus
+		@echo "${RED}${BOLD}Deleting executable${RESET}"
+		@${RM} philo_bonus
 
 re:		fclean all
 

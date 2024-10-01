@@ -12,13 +12,14 @@
 
 #include "../include/philo_bonus.h"
 
-int	exp_ended(t_info *info)
+int	experiment_ended(t_info *info)
 {
 	int	end;
 
+	sem_wait(info->dead_full);
 	end = (info->all_full == info->philo_num || info->one_dead);
 	sem_post(info->dead_full);
-    return (end);
+	return (end);
 }
 
 int	check_if_full(t_philo *philo)
@@ -31,20 +32,27 @@ int	check_if_full(t_philo *philo)
 			philo->info->all_full++;
 			sem_post(philo->info->is_full);
 		}
-	if (philo->info->all_full == philo->info->philo_num)
-		return (sem_post(philo->info->dead_full), sem_post(philo->info->is_eating), sem_post(philo->info->is_finished), 1);
+		if (philo->info->all_full == philo->info->philo_num)
+			return (sem_post(philo->info->dead_full), \
+			sem_post(philo->info->is_eating), \
+			sem_post(philo->info->is_finished), 1);
 	}
 	return (0);
 }
 
 int	check_for_death(t_philo *philo)
 {
-	if (get_ctime(philo->info) - philo->last_meal >= philo->time_to_die && !philo->is_eating && !philo->info->one_dead)
+	sem_wait(philo->info->dead_full);
+	if (get_ctime(philo->info) - philo->last_meal >= philo->time_to_die \
+	&& !philo->is_eating && !philo->info->one_dead)
 	{
 		is_doing("died", philo);
 		philo->info->one_dead = 1;
-		return (sem_post(philo->info->dead_full), sem_post(philo->info->is_eating), sem_post(philo->info->is_finished), 1);
+		return (sem_post(philo->info->dead_full), \
+		sem_post(philo->info->is_eating), \
+		sem_post(philo->info->is_finished), 1);
 	}
+	sem_post(philo->info->dead_full);
 	return (0);
 }
 
@@ -55,7 +63,6 @@ void	*send_signal(void *data)
 	philo = (t_philo *)data;
 	while (1)
 	{
-		sem_wait(philo->info->dead_full);
 		sem_wait(philo->info->is_eating);
 		if (check_for_death(philo))
 			break ;
@@ -68,23 +75,23 @@ void	*send_signal(void *data)
 	return (NULL);
 }
 
-void    *monitor(void *data)
+void	*monitor(void *data)
 {
-    t_info  *info;
+	t_info	*info;
 	int		i;
 
 	i = 0;
-    info = (t_info *)data;
-    while (1)
-    {
-        sem_wait(info->is_full);
-        i++;
-        if (i == info->philo_num)
-        {
-            sem_post(info->is_finished);
-            break ;
-        }
+	info = (t_info *)data;
+	while (1)
+	{
 		usleep(1);
-    }
+		sem_wait(info->is_full);
+		i++;
+		if (i == info->philo_num)
+		{
+			sem_post(info->is_finished);
+			break ;
+		}
+	}
 	return (NULL);
 }

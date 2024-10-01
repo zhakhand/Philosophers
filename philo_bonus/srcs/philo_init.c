@@ -12,7 +12,7 @@
 
 #include "../include/philo_bonus.h"
 
-void	init_mutexes(t_info *info)
+void	init_semaphores(t_info *info)
 {
 	sem_unlink("/is_eating");
 	sem_unlink("/is_writing");
@@ -48,7 +48,7 @@ void	init_philo(t_info *info, char **args)
 	int		i;
 
 	i = -1;
-	init_mutexes(info);
+	init_semaphores(info);
 	while (++i < info->philo_num)
 	{
 		info->philos[i].info = info;

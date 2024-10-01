@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/01 10:34:16 by dzhakhan          #+#    #+#             */
+/*   Updated: 2024/10/01 10:34:16 by dzhakhan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_BONUS_H
 # define PHILO_BONUS_H
 # include <semaphore.h>
@@ -46,23 +58,19 @@ t_info		*init_info(char **args);
 void		init_philo(t_info *info, char **args);
 /*TIMESTAMP*/
 long long	get_ctime(t_info *info);
-long long	ft_usleep(long long ms, t_info *info);
+long long	ft_usleep(long long milliseconds, t_info *info);
 /*ROUTINE*/
 void		routine(t_philo *philo);
 void		is_doing(char *msg, t_philo *philo);
 /*OVERSEER*/
-void		overlord(t_info *info);
 void		*send_signal(void *data);
 void		*monitor(void *data);
-void		all_ate(t_info *info);
-int			exp_ended(t_info *info);
+int			experiment_ended(t_info *info);
 /*UTILS*/
 char		*ft_itoa(int n);
 int			ft_atoi(char const *str);
-char		*ft_strjoin(char *s1, char *s2);
 int			check_args(char **args);
 int			ft_strcmp(char const *s1, char const *s2);
-void		set_forks(int *upper, int *lower, t_philo *philo);
 /*CLEANUP*/
 
 #endif
