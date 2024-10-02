@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 08:53:22 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/10/01 09:36:44 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:50:32 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,30 @@
 
 void	init_semaphores(t_info *info)
 {
+	sem_unlink("/orders");
 	sem_unlink("/is_eating");
 	sem_unlink("/is_writing");
 	sem_unlink("/is_finished");
 	sem_unlink("/forks");
-	sem_unlink("/dead_full");
-	sem_unlink("/is_full");
+	sem_unlink("/dead");
+	info->orders = sem_open("/orders", O_CREAT | O_EXCL, 0644, 1);
 	info->is_eating = sem_open("/is_eating", O_CREAT | O_EXCL, 0644, 1);
 	info->is_writing = sem_open("/is_writing", O_CREAT | O_EXCL, 0644, 1);
 	info->is_finished = sem_open("/is_finished", O_CREAT | O_EXCL, 0644, 1);
-	info->dead_full = sem_open("/dead_full", O_CREAT | O_EXCL, 0644, 1);
+	info->dead = sem_open("/dead", O_CREAT | O_EXCL, 0644, 1);
 	info->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, info->philo_num);
-	info->is_full = sem_open("/is_full", O_CREAT, 0644, 1);
+	sem_unlink("/orders");
+	sem_unlink("/is_eating");
+	sem_unlink("/is_writing");
+	sem_unlink("/is_finished");
+	sem_unlink("/forks");
+	sem_unlink("/dead");
+	if (info->meal_goal != -1)
+	{
+		sem_unlink("/is_full");
+		info->is_full = sem_open("/is_full", O_CREAT | O_EXCL, 0644, 1);
+		sem_unlink("/is_full");
+	}
 }
 
 void	apply_args(t_philo *philo, char **args)
@@ -71,5 +83,8 @@ t_info	init_info(char **args)
 	info.start = 0;
 	info.start = get_ctime(&info);
 	info.philo_num = ft_atoi(args[0]);
+	info.meal_goal = -1;
+	if (args[4])
+		info.meal_goal = ft_atoi(args[4]);
 	return (info);
 }

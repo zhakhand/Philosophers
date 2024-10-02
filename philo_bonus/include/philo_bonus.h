@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 10:34:16 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/10/01 10:34:16 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/10/02 11:26:10 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,13 @@ typedef struct s_info
 	int				one_dead;
 	int				all_full;
 	int				philo_num;
+	int				meal_goal;
 	long long		start;
+	sem_t			*orders;
 	sem_t			*is_eating;
 	sem_t			*is_writing;
 	sem_t			*is_finished;
-	sem_t			*dead_full;
+	sem_t			*dead;
 	sem_t			*is_full;
 	sem_t			*forks;
 	t_philo			*philos;
@@ -64,7 +66,7 @@ void		routine(t_philo *philo);
 void		is_doing(char *msg, t_philo *philo);
 /*OVERSEER*/
 void		*send_signal(void *data);
-void		*monitor(void *data);
+void		monitor(t_info *info);
 int			experiment_ended(t_info *info);
 /*UTILS*/
 char		*ft_itoa(int n);

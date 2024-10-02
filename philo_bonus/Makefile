@@ -19,7 +19,7 @@ RM = rm -f
 
 OBJS = ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=thread -O1
 
 all: ${NAME}
 
@@ -28,7 +28,7 @@ all: ${NAME}
 		@${CC} ${CFLAGS} -c $< -o $@
 
 ${NAME}: ${OBJS}
-		@${CC} ${CFLAGS} ${OBJS} -o $@
+		@${CC} ${CFLAGS} ${OBJS} -o $@ 
 		@echo "${BACK}${RED}${BOLD} Successfuly built ${NAME} ${RESET}"
 
 clean:

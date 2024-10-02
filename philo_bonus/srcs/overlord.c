@@ -6,7 +6,7 @@
 /*   By: dzhakhan <dzhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 08:53:16 by dzhakhan          #+#    #+#             */
-/*   Updated: 2024/10/01 09:33:59 by dzhakhan         ###   ########.fr       */
+/*   Updated: 2024/10/02 12:58:17 by dzhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	experiment_ended(t_info *info)
 {
 	int	end;
 
-	sem_wait(info->dead_full);
+	sem_wait(info->dead);
 	end = (info->all_full == info->philo_num || info->one_dead);
-	sem_post(info->dead_full);
+	sem_post(info->dead);
 	return (end);
 }
 
@@ -33,7 +33,7 @@ int	check_if_full(t_philo *philo)
 			sem_post(philo->info->is_full);
 		}
 		if (philo->info->all_full == philo->info->philo_num)
-			return (sem_post(philo->info->dead_full), \
+			return (sem_post(philo->info->dead), \
 			sem_post(philo->info->is_eating), \
 			sem_post(philo->info->is_finished), 1);
 	}
@@ -42,17 +42,26 @@ int	check_if_full(t_philo *philo)
 
 int	check_for_death(t_philo *philo)
 {
-	sem_wait(philo->info->dead_full);
+	int	i;
+
+	sem_wait(philo->info->dead);
+	usleep(1);
 	if (get_ctime(philo->info) - philo->last_meal >= philo->time_to_die \
 	&& !philo->is_eating && !philo->info->one_dead)
 	{
 		is_doing("died", philo);
 		philo->info->one_dead = 1;
-		return (sem_post(philo->info->dead_full), \
+		if (philo->num_to_eat != -1)
+		{
+			i = -1;
+			while (++i < philo->info->philo_num)
+				sem_post(philo->info->is_full);
+		}
+		return (sem_post(philo->info->dead), \
 		sem_post(philo->info->is_eating), \
 		sem_post(philo->info->is_finished), 1);
 	}
-	sem_post(philo->info->dead_full);
+	sem_post(philo->info->dead);
 	return (0);
 }
 
@@ -69,20 +78,18 @@ void	*send_signal(void *data)
 		if (check_if_full(philo))
 			break ;
 		sem_post(philo->info->is_eating);
-		sem_post(philo->info->dead_full);
+		sem_post(philo->info->dead);
 		usleep(1);
 	}
 	return (NULL);
 }
 
-void	*monitor(void *data)
+void	monitor(t_info *info)
 {
-	t_info	*info;
 	int		i;
 
 	i = 0;
-	info = (t_info *)data;
-	while (1)
+	while (!info->one_dead)
 	{
 		sem_wait(info->is_full);
 		i++;
@@ -94,5 +101,5 @@ void	*monitor(void *data)
 		}
 		usleep(1);
 	}
-	return (NULL);
+	return ;
 }
