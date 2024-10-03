@@ -30,7 +30,7 @@ In order to survive Philosophers need:
 Solving data races:
 Create a mutex for each important part of the information: output, incrementing meals eaten, state of the Philosopher and state of the Program.
 
-Bonus:
+Bonus: BONUS_PART LEAKS BE CAREFUL
 Bonus part is a bit different because each philosopher is now a child process of the main program and for them to operate smoothly we need to have one monitor to wait for signal from each philosopher,
 that indicates if they are full or dead and another monitor for each philosopher to send those signals. Semaphore in the middle of the table will act as a waiter passing forks to philosopher. Synchronization
 is not the concern here, but to understand how signals from semaphores work. Good luck and GG!
